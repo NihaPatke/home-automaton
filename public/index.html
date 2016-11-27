@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home Automaton</title>
+</head>
+<body>
+  <h1>Home Automaton</h1>
+  <table style="border: 1px solid black">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>State</th>
+      </tr>
+    </thead>
+    <tbody style="color: maroon">
+      <tr>
+        <th>Fan</th>
+        <td>
+          <select id="fan">
+            <option value=""></option>
+            <option value="ON">ON</option>
+            <option value="OFF">OFF</option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript">
+    $.ajax({
+      url: '/api/v1/resource/fan'
+    }).done((data) => {
+      console.log('data:',data);
+      $('#fan option[value='+data+']').prop('selected',true);
+    });
+
+    $('#fan').on('change', (event) => {
+      const newValue = event.target.value;
+      $.ajax({
+        url: '/api/v1/resource/fan?state='+newValue,
+        method: 'PUT'
+      }).done((data) => {
+        console.log('changed to:',data);
+      });
+    });
+  </script>
+</body>
+</html>
