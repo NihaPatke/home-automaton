@@ -23,24 +23,55 @@
           </select>
         </td>
       </tr>
+      <tr>
+        <th>Light</th>
+        <td>
+          <select id="light">
+            <option value=""></option>
+            <option value="ON">ON</option>
+            <option value="OFF">OFF</option>
+          </select>
+        </td>
+      </tr>
     </tbody>
   </table>
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
   <script type="text/javascript">
+    /* Load the current state of Fan */
     $.ajax({
       url: '/api/v1/resource/fan'
-    }).done((data) => {
-      console.log('data:',data);
+    }).done(function(data) {
+      console.log('FanData:',data);
       $('#fan option[value='+data+']').prop('selected',true);
     });
 
-    $('#fan').on('change', (event) => {
+    /* Load the current state of Light */
+    $.ajax({
+      url: '/api/v1/resource/light'
+    }).done(function(data) {
+      console.log('LightData:',data);
+      $('#light option[value='+data+']').prop('selected',true);
+    });
+
+    /* update fan's current state when it is changed */
+    $('#fan').on('change', function(event) {
       const newValue = event.target.value;
       $.ajax({
         url: '/api/v1/resource/fan?state='+newValue,
         method: 'PUT'
-      }).done((data) => {
-        console.log('changed to:',data);
+      }).done(function(data) {
+        console.log('fan state changed to:',data);
+      });
+    });
+
+    /* update light's current state when it is changed */
+    $('#light').on('change', function(event) {
+      const newValue = event.target.value;
+      $.ajax({
+        url: '/api/v1/resource/light?state='+newValue,
+        method: 'PUT'
+      }).done(function(data) {
+        console.log('light state changed to:',data);
       });
     });
   </script>
